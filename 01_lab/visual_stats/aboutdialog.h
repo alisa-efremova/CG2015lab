@@ -2,6 +2,7 @@
 #define ABOUTDIALOG_H
 
 #include <QDialog>
+#include <QGraphicsScene>
 
 namespace Ui {
 class AboutDialog;
@@ -16,7 +17,13 @@ public:
     ~AboutDialog();
 
 private:
+    void drawInitials();
+    void drawT(int xStep, int yStep);
+    void drawA(int xStep, int yStep);
+    void drawB(int xStep, int yStep);
+
     Ui::AboutDialog *ui;
+    QGraphicsScene *scene;
 };
 
 #endif // ABOUTDIALOG_H
