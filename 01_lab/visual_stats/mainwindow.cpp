@@ -42,7 +42,7 @@ MainWindow::~MainWindow()
     delete m_ui;
 }
 
-bool MainWindow::hasUnsavedChanges()
+bool MainWindow::checkUnsavedChanges()
 {
     if (!m_tableModel->isSaved())
     {
@@ -71,7 +71,7 @@ bool MainWindow::hasUnsavedChanges()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (hasUnsavedChanges())
+    if (checkUnsavedChanges())
     {
         event->accept();
     }
@@ -83,7 +83,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_newDocument_triggered()
 {
-    if (hasUnsavedChanges())
+    if (checkUnsavedChanges())
     {
         m_document->createNew();
     }
@@ -96,7 +96,7 @@ void MainWindow::on_saveDocument_triggered()
 
 void MainWindow::on_openDocument_triggered()
 {
-    if (hasUnsavedChanges())
+    if (checkUnsavedChanges())
     {
         m_document->open();
     }

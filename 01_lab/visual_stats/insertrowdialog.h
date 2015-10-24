@@ -15,7 +15,7 @@ public:
     explicit InsertRowDialog(QWidget *parent = 0);
     ~InsertRowDialog();
 
-    bool InputFieldsAreValid();
+    bool areInputFieldsValid();
 
 signals:
     void rowReady(QString text, int value);

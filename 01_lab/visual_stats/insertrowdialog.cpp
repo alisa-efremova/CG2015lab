@@ -11,7 +11,7 @@ InsertRowDialog::InsertRowDialog(QWidget *parent) :
 
     connect(ui->editName, SIGNAL(textChanged(const QString)), this, SLOT(onEditName(const QString)));
     connect(ui->editValue, SIGNAL(valueChanged(int)), this, SLOT(onEditValue(int)));
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(this->InputFieldsAreValid());
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(this->areInputFieldsValid());
 }
 
 InsertRowDialog::~InsertRowDialog()
@@ -19,7 +19,7 @@ InsertRowDialog::~InsertRowDialog()
     delete ui;
 }
 
-bool InsertRowDialog::InputFieldsAreValid()
+bool InsertRowDialog::areInputFieldsValid()
 {
     QString name = ui->editName->text();
     int val = ui->editValue->value();
@@ -33,10 +33,10 @@ void InsertRowDialog::onAccepted()
 
 void InsertRowDialog::onEditValue(int val)
 {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(this->InputFieldsAreValid());
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(this->areInputFieldsValid());
 }
 
 void InsertRowDialog::onEditName(const QString &name)
 {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(this->InputFieldsAreValid());
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(this->areInputFieldsValid());
 }

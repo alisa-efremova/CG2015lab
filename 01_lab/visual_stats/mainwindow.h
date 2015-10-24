@@ -34,7 +34,7 @@ private slots:
     void on_actionDeleteRow_triggered();
 
 private:
-    bool hasUnsavedChanges();
+    bool checkUnsavedChanges();
 
     Ui::MainWindow *m_ui;
     std::shared_ptr<StatsTableModel> m_tableModel;
