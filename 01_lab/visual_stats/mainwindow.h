@@ -1,8 +1,10 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QGraphicsScene>
 #include <QString>
 #include <memory>
+#include <QAbstractItemModel>
 
 namespace Ui {
 class MainWindow;
@@ -33,12 +35,20 @@ private slots:
 
     void on_actionDeleteRow_triggered();
 
+    void on_tableUpdated();
+    void on_valueUpdated(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    //void on_tableUpdated(const QList<QPersistentModelIndex> &parents = QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint);
+   // void on_tableUpdated(const QList<QPersistentModelIndex> &parents, QAbstractItemModel::LayoutChangeHint hint);
+
 private:
     bool checkUnsavedChanges();
+    void drawPieChart();
+    void addPieToChart(QRectF & rect, qreal startAngle, qreal sweepLength, const QColor & color);
 
     Ui::MainWindow *m_ui;
     std::shared_ptr<StatsTableModel> m_tableModel;
     std::unique_ptr<StatsDocument> m_document;
+    QGraphicsScene *scene;
 
     // QWidget interface
 protected:

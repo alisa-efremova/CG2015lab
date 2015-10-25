@@ -35,11 +35,61 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->actionInsertRow->setShortcut(QKeySequence(tr("Insert")));
 
     m_document.reset(new StatsDocument(this, *m_tableModel));
+
+    scene = new QGraphicsScene(this);
+    m_ui->graphicsView->setScene(scene);
+
+    drawPieChart();
+
+    connect(m_tableModel.get(), SIGNAL(dataChanged(const QModelIndex, const QModelIndex)), this, SLOT(on_valueUpdated(const QModelIndex, const QModelIndex)));
+    connect(m_tableModel.get(), SIGNAL(layoutChanged()), this, SLOT(on_tableUpdated()));
 }
 
 MainWindow::~MainWindow()
 {
     delete m_ui;
+}
+
+void MainWindow::drawPieChart()
+{
+    int xOffset(0), yOffset(0);
+    qreal size = m_ui->graphicsView->width() * 0.9;
+    QRectF rect(xOffset, yOffset, size, size);
+
+    auto model = m_tableModel->statsModel();
+    qreal startAngle = 90;
+
+    QColor color;
+    qreal sum = model.valueSum();
+
+    scene->clear();
+    for (size_t i = 0; i < model.size(); i++)
+    {
+        qreal sweepLength = -1 * model.value(i) / sum * 360;
+        color.setHsv((30 * i) % 360, 230, 240);
+        addPieToChart(rect, startAngle, sweepLength, color);
+        startAngle += sweepLength;
+    }
+}
+
+void MainWindow::addPieToChart(QRectF & rect, qreal startAngle, qreal sweepLength, const QColor & color)
+{
+    QPainterPath path;
+    path.moveTo(rect.center());
+    path.arcTo(rect, startAngle, sweepLength);
+    scene->addPath(path, QPen(Qt::white), QBrush(color));
+}
+
+void MainWindow::on_tableUpdated()
+{
+    drawPieChart();
+}
+
+void MainWindow::on_valueUpdated(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    Q_UNUSED(topLeft);
+    Q_UNUSED(bottomRight);
+    drawPieChart();
 }
 
 bool MainWindow::checkUnsavedChanges()
@@ -158,6 +208,6 @@ void MainWindow::on_actionDeleteRow_triggered()
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    QRect tableArea = QRect(QPoint(0, 0), event->size());
-    m_ui->tableData->setGeometry(tableArea);
+    Q_UNUSED(event);
+    drawPieChart();
 }

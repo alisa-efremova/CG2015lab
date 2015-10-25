@@ -109,9 +109,11 @@ bool StatsTableModel::setData(const QModelIndex &index, const QVariant &value, i
         {
         case COLUMN_ID_NAME:
             m_statsModel.setKey(index.row(), value.toString());
+            emit dataChanged(index, index);
             return true;
         case COLUMN_ID_VALUE:
             m_statsModel.setValue(index.row(), value.toInt());
+            emit dataChanged(index, index);
             return true;
         default:
             break;

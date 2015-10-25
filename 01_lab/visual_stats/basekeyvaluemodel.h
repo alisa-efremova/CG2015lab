@@ -37,6 +37,15 @@ public:
         return m_items.size();
     }
 
+    float valueSum() const
+    {
+        int sum(0);
+        std::for_each(m_items.begin(), m_items.end(), [&] (Item itm) {
+            sum += itm.second;
+        });
+        return sum;
+    }
+
     const_iterator begin() const
     {
         return m_items.begin();
