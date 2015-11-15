@@ -24,6 +24,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     void showEvent(QShowEvent *event) override;
 
+    virtual void keyPressEvent(QKeyEvent *event);
+
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event);
+
 private slots:
     void deferRender();
     void render();
@@ -31,10 +38,24 @@ private slots:
     void initRendering();
     void updateScene(BaseScene &scene);
 
+    void rotateLeft();
+    void rotateRight();
+    void rotateUp();
+    void rotateDown();
+
 private:
     QTime m_updateTime;
     bool m_canRender = false;
     bool m_updatePending = false;
+
     std::vector<std::shared_ptr<BaseScene>> m_sceneStack;
     QOpenGLContext *m_pContext = nullptr;
+
+    bool isMousePressed = false;
+    QPoint ptrMousePosition;
+
+    float xRot = 0;
+    float yRot = 0;
+    float zRot = 0;
+    float xMov = 0;
 };
