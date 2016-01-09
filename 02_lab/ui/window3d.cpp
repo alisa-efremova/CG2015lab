@@ -8,6 +8,39 @@ Window3D::Window3D(QWindow *parent)
 {
     setSurfaceType(QWindow::OpenGLSurface);
     setFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    m_viewerController = std::make_shared<ViewerInputController>();
+    m_playerController = std::make_shared<PlayerInputController>();
+    m_activeController = m_viewerController;
+    installEventFilter(this);
+    m_viewerController->installEventFilter(this);
+    m_playerController->installEventFilter(this);
+}
+
+bool Window3D::eventFilter(QObject *target, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress)
+    {
+      QKeyEvent *keyEvent = (QKeyEvent *)event;
+      if (keyEvent->key() == Qt::Key_Tab)
+      {
+        if (m_activeController == m_viewerController)
+        {
+            m_activeController = m_playerController;
+        }
+        else
+        {
+            m_activeController = m_viewerController;
+        }
+        return true;
+      }
+      else if (keyEvent->key() == Qt::Key_Escape)
+      {
+          this->close();
+      }
+    }
+
+    m_activeController->handleEvent(event);
+    return QWindow::eventFilter(target, event);
 }
 
 void Window3D::setFixedSize(QSize size)
@@ -20,6 +53,9 @@ void Window3D::pushScene(std::shared_ptr<BaseScene> scene)
 {
     m_sceneStack.push_back(scene);
     scene->onPush();
+
+    m_playerController->setScene(scene);
+    m_viewerController->setScene(scene);
 }
 
 void Window3D::popScene()
@@ -29,92 +65,6 @@ void Window3D::popScene()
         m_sceneStack.back()->onPop();
         m_sceneStack.pop_back();
     }
-}
-
-void Window3D::mousePressEvent(QMouseEvent* event)
-{
-    ptrMousePosition = event->pos();
-    isMousePressed = true;
-    return QWindow::mousePressEvent(event);
-}
-
-void Window3D::mouseReleaseEvent(QMouseEvent* event)
-{
-    isMousePressed = false;
-    return QWindow::mouseReleaseEvent(event);
-}
-
-void Window3D::mouseMoveEvent(QMouseEvent* event)
-{
-
-    if (isMousePressed)
-    {
-        yRot -= (event->y()-ptrMousePosition.y())/10;
-        if (yRot > 90) yRot = 90;
-        if (yRot < 0) yRot = 0;
-
-        zRot -= (event->x()-ptrMousePosition.x())/10;
-
-        ptrMousePosition = event->pos();
-    }
-    return QWindow::mouseMoveEvent(event);
-}
-
-void Window3D::wheelEvent(QWheelEvent* event)
-{
-    if ((event->delta())>0) xMov += 1; else if ((event->delta())<0) xMov -= 1;
-    if (xMov < -10) xMov = -10;
-    if (xMov > 3) xMov = 3;
-
-    return QWindow::wheelEvent(event);
-}
-
-void Window3D::keyPressEvent(QKeyEvent* event)
-{
-    switch (event->key())
-    {
-    case Qt::Key_Left:
-        rotateLeft();
-        break;
-
-    case Qt::Key_Right:
-        rotateRight();
-        break;
-
-    case Qt::Key_Up:
-        rotateUp();
-        break;
-
-    case Qt::Key_Down:
-        rotateDown();
-        break;
-
-    case Qt::Key_Escape:
-        this->close();
-        break;
-    }
-
-   return QWindow::keyPressEvent(event);
-}
-
-void Window3D::rotateLeft()
-{
-   zRot += 1.0;
-}
-
-void Window3D::rotateRight()
-{
-   zRot -= 1.0;
-}
-
-void Window3D::rotateUp()
-{
-   yRot += 1.0;
-}
-
-void Window3D::rotateDown()
-{
-   yRot -= 1.0;
 }
 
 bool Window3D::event(QEvent *event)
@@ -220,7 +170,8 @@ void Window3D::updateScene(BaseScene &scene)
 
     QOpenGLPaintDevice device(size());
     QPainter painter(&device);
-    scene.camera().loadMatrix(QVector3D(xRot, yRot, zRot), QVector3D(xMov, 0.0f, 0.0f));
+    m_activeController->updateCamera();
+    //scene.camera().loadMatrix(QVector3D(xRot, yRot, zRot), QVector3D(xMov, 0.0f, 0.0f));
     scene.render(painter);
     scene.visit([&](SceneNode & node) {
         node.render(painter);

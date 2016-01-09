@@ -25,7 +25,9 @@ void GameApplication::loadScene()
     auto scene = std::make_shared<BaseScene>();
     scene->camera().setViewport(m_window.size());
     scene->camera().lookAt(QVector3D(6, 3, 2), QVector3D(0, 0, 0), QVector3D(0, 0, 1));
+
     new ColoredCube(scene.get());
     m_window.pushScene(scene);
+
 }
 
