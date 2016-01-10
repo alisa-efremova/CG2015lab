@@ -8,14 +8,13 @@ SceneCamera::SceneCamera(QSize viewport, QObject *parent)
 {
 }
 
-void SceneCamera::loadMatrix(const QVector3D &rotAngles, const QVector3D &transl)
+void SceneCamera::loadMatrix(const QVector3D &rotAngles)
 {
     QMatrix4x4 matrix;
     matrix.lookAt(m_eye, m_eye + m_front, m_up);
     matrix.rotate(rotAngles.x(), 1.0f, 0.0f, 0.0f);
     matrix.rotate(rotAngles.y(), 0.0f, 1.0f, 0.0f);
     matrix.rotate(rotAngles.z(), 0.0f, 0.0f, 1.0f);
-    matrix.translate(transl);
     GLHelper::setModelViewMatrix(matrix);
 }
 
@@ -52,6 +51,15 @@ void SceneCamera::setViewport(QSize viewport)
 QVector3D SceneCamera::eye() const
 {
     return m_eye;
+}
+
+QVector3D SceneCamera::at() const
+{
+    return m_eye + m_front;
+}
+QVector3D SceneCamera::up() const
+{
+    return m_up;
 }
 
 void SceneCamera::setSpeed(QVector3D speed)

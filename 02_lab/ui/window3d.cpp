@@ -23,6 +23,7 @@ bool Window3D::eventFilter(QObject *target, QEvent *event)
       QKeyEvent *keyEvent = (QKeyEvent *)event;
       if (keyEvent->key() == Qt::Key_Tab)
       {
+        m_activeController->saveCameraAttr();
         if (m_activeController == m_viewerController)
         {
             m_activeController = m_playerController;
@@ -31,6 +32,7 @@ bool Window3D::eventFilter(QObject *target, QEvent *event)
         {
             m_activeController = m_viewerController;
         }
+        m_activeController->restoreCameraAttr();
         return true;
       }
       else if (keyEvent->key() == Qt::Key_Escape)

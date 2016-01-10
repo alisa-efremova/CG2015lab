@@ -15,7 +15,7 @@ class SceneCamera : public QObject
 public:
     explicit SceneCamera(QSize viewport, QObject *parent = 0);
 
-    void loadMatrix(const QVector3D &rotAngles, const QVector3D &transl);
+    void loadMatrix(const QVector3D &rotAngles);
     void lookAt(QVector3D const &eye, QVector3D const& at, QVector3D const& up);
     /// @param msec - milliseconds since last advance or creation.
     void advance(int64_t msec);
@@ -23,6 +23,8 @@ public:
     QSize viewport() const;
     void setViewport(QSize viewport);
     QVector3D eye() const;
+    QVector3D at() const;
+    QVector3D up() const;
     void setSpeed(QVector3D speed);
     QVector3D speed() const;
 
