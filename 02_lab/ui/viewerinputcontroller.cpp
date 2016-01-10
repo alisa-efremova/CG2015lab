@@ -55,11 +55,11 @@ void ViewerInputController::moveByMouse(QMouseEvent* event)
 {
     if (isMousePressed)
     {
-        yRot += (event->y()-ptrMousePosition.y())/10;
+        yRot += (event->y() - ptrMousePosition.y())/10;
         if (yRot > 90) yRot = 90;
         if (yRot < 0) yRot = 0;
 
-        zRot += (event->x()-ptrMousePosition.x())/10;
+        zRot += (event->x() - ptrMousePosition.x())/10;
 
         ptrMousePosition = event->pos();
     }

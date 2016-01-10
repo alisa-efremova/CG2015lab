@@ -12,9 +12,11 @@ void SceneCamera::loadMatrix(const QVector3D &rotAngles)
 {
     QMatrix4x4 matrix;
     matrix.lookAt(m_eye, m_eye + m_front, m_up);
-    matrix.rotate(rotAngles.x(), 1.0f, 0.0f, 0.0f);
-    matrix.rotate(rotAngles.y(), 0.0f, 1.0f, 0.0f);
-    matrix.rotate(rotAngles.z(), 0.0f, 0.0f, 1.0f);
+
+    QVector3D left = QVector3D::crossProduct(m_up, m_front);
+    matrix.rotate(-rotAngles.y(), left);
+    matrix.rotate(rotAngles.z(), m_up);
+
     GLHelper::setModelViewMatrix(matrix);
 }
 
