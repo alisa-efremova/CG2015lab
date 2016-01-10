@@ -60,7 +60,6 @@ void PlayerInputController::handleEvent(QEvent * event)
             }
             break;
 
-        case Qt::Key_Up:
         case Qt::Key_W:
             if (event->type() == QEvent::KeyPress)
             {
@@ -72,7 +71,6 @@ void PlayerInputController::handleEvent(QEvent * event)
             }
             break;
 
-        case Qt::Key_Down:
         case Qt::Key_S:
             if (event->type() == QEvent::KeyPress)
             {
@@ -81,6 +79,27 @@ void PlayerInputController::handleEvent(QEvent * event)
             else
             {
                 speed.setZ(0);
+            }
+            break;
+
+        case Qt::Key_Up:
+            if (event->type() == QEvent::KeyPress)
+            {
+                speed.setX(1);
+            }
+            else
+            {
+                speed.setX(0);
+            }
+            break;
+        case Qt::Key_Down:
+            if (event->type() == QEvent::KeyPress)
+            {
+                speed.setX(-1);
+            }
+            else
+            {
+                speed.setX(0);
             }
             break;
         }

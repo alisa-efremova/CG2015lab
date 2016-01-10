@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <QMessageBox>
 #include <QResizeEvent>
+#include <QTimer>
 #include <QSortFilterProxyModel>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -208,6 +209,6 @@ void MainWindow::on_actionDeleteRow_triggered()
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    Q_UNUSED(event);
-    drawPieChart();
+    QMainWindow::resizeEvent(event);
+    QTimer::singleShot(0, this, SLOT(drawPieChart()));
 }

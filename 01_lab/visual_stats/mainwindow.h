@@ -21,6 +21,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void drawPieChart();
     void on_newDocument_triggered();
     void on_saveDocument_triggered();
     void on_openDocument_triggered();
@@ -42,7 +43,6 @@ private slots:
 
 private:
     bool checkUnsavedChanges();
-    void drawPieChart();
     void addPieToChart(QRectF & rect, qreal startAngle, qreal sweepLength, const QColor & color);
 
     Ui::MainWindow *m_ui;
