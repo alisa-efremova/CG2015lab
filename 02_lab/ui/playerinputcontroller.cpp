@@ -1,4 +1,5 @@
 #include "playerinputcontroller.h"
+#include <QMatrix4x4>
 
 PlayerInputController::PlayerInputController()
 {
@@ -33,6 +34,7 @@ void PlayerInputController::handleEvent(QEvent * event)
     {
         QKeyEvent *keyEvent = (QKeyEvent *)event;
         QVector3D speed = m_scene->camera().speed();
+        float maxSpeed = 2.0f;
 
         switch (keyEvent->key())
         {
@@ -40,7 +42,7 @@ void PlayerInputController::handleEvent(QEvent * event)
         case Qt::Key_A:
             if (event->type() == QEvent::KeyPress)
             {
-                speed.setY(1);
+                speed.setY(maxSpeed);
             }
             else
             {
@@ -52,7 +54,7 @@ void PlayerInputController::handleEvent(QEvent * event)
         case Qt::Key_D:
             if (event->type() == QEvent::KeyPress)
             {
-                speed.setY(-1);
+                speed.setY(-maxSpeed);
             }
             else
             {
@@ -60,42 +62,42 @@ void PlayerInputController::handleEvent(QEvent * event)
             }
             break;
 
-        case Qt::Key_W:
-            if (event->type() == QEvent::KeyPress)
-            {
-                speed.setZ(1);
-            }
-            else
-            {
-                speed.setZ(0);
-            }
-            break;
-
-        case Qt::Key_S:
-            if (event->type() == QEvent::KeyPress)
-            {
-                speed.setZ(-1);
-            }
-            else
-            {
-                speed.setZ(0);
-            }
-            break;
-
         case Qt::Key_Up:
             if (event->type() == QEvent::KeyPress)
             {
-                speed.setX(1);
+                speed.setZ(maxSpeed);
+            }
+            else
+            {
+                speed.setZ(0);
+            }
+            break;
+
+        case Qt::Key_Down:
+            if (event->type() == QEvent::KeyPress)
+            {
+                speed.setZ(-maxSpeed);
+            }
+            else
+            {
+                speed.setZ(0);
+            }
+            break;
+
+        case Qt::Key_W:
+            if (event->type() == QEvent::KeyPress)
+            {
+                speed.setX(maxSpeed);
             }
             else
             {
                 speed.setX(0);
             }
             break;
-        case Qt::Key_Down:
+        case Qt::Key_S:
             if (event->type() == QEvent::KeyPress)
             {
-                speed.setX(-1);
+                speed.setX(-maxSpeed);
             }
             else
             {
@@ -124,6 +126,24 @@ void PlayerInputController::handleEvent(QEvent * event)
 
 void PlayerInputController::changeDirection(QMouseEvent * event)
 {
+    if (isMousePressed)
+    {
+        saveCameraAttr();
+
+        QPoint diff = event->pos() - ptrMousePosition;
+
+        QMatrix4x4 matrix;
+        QVector3D front = m_at - m_eye;
+        QVector3D left = QVector3D::crossProduct(m_up, front);
+        matrix.rotate(-1 * diff.x() * 0.2f, m_up);
+        matrix.rotate(diff.y() * 0.2f, left);
+        front = matrix * front;
+        m_at = front + m_eye;
+
+        restoreCameraAttr();
+
+        ptrMousePosition = event->pos();
+    }
 }
 
 

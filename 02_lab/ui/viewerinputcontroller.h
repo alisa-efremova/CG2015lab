@@ -30,5 +30,5 @@ private:
     QPoint ptrMousePosition;
 
     void changeDistance(QWheelEvent *event);
-    void moveByMouse(QMouseEvent *event);
+    void turnAround(QMouseEvent *event);
 };

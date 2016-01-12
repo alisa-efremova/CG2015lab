@@ -30,7 +30,7 @@ void ViewerInputController::handleEvent(QEvent *event)
     else if (event->type() == QEvent::MouseMove)
     {
         QMouseEvent *mouseEvent = (QMouseEvent *)event;
-        moveByMouse(mouseEvent);
+        turnAround(mouseEvent);
     }
     else if (event->type() == QEvent::Wheel)
     {
@@ -51,15 +51,15 @@ void ViewerInputController::restoreCameraAttr()
     m_scene->camera().lookAt(m_eye, m_at, m_up);
 }
 
-void ViewerInputController::moveByMouse(QMouseEvent* event)
+void ViewerInputController::turnAround(QMouseEvent* event)
 {
     if (isMousePressed)
     {
-        yRot += (event->y() - ptrMousePosition.y())/10;
+        yRot += (event->y() - ptrMousePosition.y()) * 0.2f;
         if (yRot > 90) yRot = 90;
         if (yRot < 0) yRot = 0;
 
-        zRot += (event->x() - ptrMousePosition.x())/10;
+        zRot += (event->x() - ptrMousePosition.x()) * 0.2f;
 
         ptrMousePosition = event->pos();
     }
