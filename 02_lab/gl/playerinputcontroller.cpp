@@ -55,8 +55,8 @@ void PlayerInputController::handleEvent(QEvent * event)
 void PlayerInputController::processKeyEvent(QKeyEvent *keyEvent)
 {
     QVector3D speed;
-    int currentKey = EMPTY;
-    int pressedKey = EMPTY;
+    Direction currentKey = EMPTY;
+    Direction pressedKey = EMPTY;
 
     //detect current direction by pressed key
     auto it = m_keyMap.find(keyEvent->key());
@@ -86,7 +86,7 @@ void PlayerInputController::processKeyEvent(QKeyEvent *keyEvent)
     m_camera->setSpeed(speed);
 }
 
-float PlayerInputController::getSpeedByDirection(const int direction, const int reverseDirection, const int currentDirection)
+float PlayerInputController::getSpeedByDirection(const Direction direction, const Direction reverseDirection, const Direction currentDirection)
 {
     float speedVal = 0;
     if ((m_direction.at(direction) && !m_direction.at(reverseDirection)) || (m_direction.at(direction) && m_direction.at(reverseDirection) && currentDirection == direction))

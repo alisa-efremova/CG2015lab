@@ -14,7 +14,6 @@ public:
     virtual void saveCameraAttr() override;
     virtual void restoreCameraAttr() override;
 
-
 private:
     SceneCamera * m_camera;
 
@@ -22,11 +21,11 @@ private:
     QVector3D m_at;
     QVector3D m_up;
 
-    enum direction { EMPTY, UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD };
+    enum Direction { EMPTY, UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD };
     void processKeyEvent(QKeyEvent * keyEvent);
-    float getSpeedByDirection(const int direction, const int reverseDirection, const int currentDirection);
+    float getSpeedByDirection(const Direction direction, const Direction reverseDirection, const Direction currentDirection);
 
-    const std::map<int, int> m_keyMap =
+    const std::map<int, Direction> m_keyMap =
     {
         {Qt::Key_W,     FORWARD},
         {Qt::Key_A,     LEFT},
@@ -38,7 +37,7 @@ private:
         {Qt::Key_Right, RIGHT}
     };
 
-    std::map<int, bool> m_direction =
+    std::map<Direction, bool> m_direction =
     {
         {LEFT,     false},
         {RIGHT,    false},
