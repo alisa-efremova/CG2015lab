@@ -14,6 +14,7 @@ public:
     virtual void saveCameraAttr() override;
     virtual void restoreCameraAttr() override;
 
+
 private:
     SceneCamera * m_camera;
 
@@ -21,28 +22,30 @@ private:
     QVector3D m_at;
     QVector3D m_up;
 
-    struct Direction
+    enum direction { EMPTY, UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD };
+    void processKeyEvent(QKeyEvent * keyEvent);
+    float getSpeedByDirection(const int direction, const int reverseDirection, const int currentDirection);
+
+    const std::map<int, int> m_keyMap =
     {
-        bool up       = false;
-        bool down     = false;
-        bool left     = false;
-        bool right    = false;
-        bool forward  = false;
-        bool backward = false;
+        {Qt::Key_W,     FORWARD},
+        {Qt::Key_A,     LEFT},
+        {Qt::Key_S,     BACKWARD},
+        {Qt::Key_D,     RIGHT},
+        {Qt::Key_Up,    UP},
+        {Qt::Key_Left,  LEFT},
+        {Qt::Key_Down,  DOWN},
+        {Qt::Key_Right, RIGHT}
     };
 
-    Direction m_direction;
-
-    std::map<int, bool&> m_keyMap =
+    std::map<int, bool> m_direction =
     {
-        {Qt::Key_W,     m_direction.forward},
-        {Qt::Key_A,     m_direction.left},
-        {Qt::Key_S,     m_direction.backward},
-        {Qt::Key_D,     m_direction.right},
-        {Qt::Key_Up,    m_direction.up},
-        {Qt::Key_Left,  m_direction.left},
-        {Qt::Key_Down,  m_direction.down},
-        {Qt::Key_Right, m_direction.right}
+        {LEFT,     false},
+        {RIGHT,    false},
+        {FORWARD,  false},
+        {BACKWARD, false},
+        {UP,       false},
+        {DOWN,     false}
     };
 
     bool isMousePressed = false;

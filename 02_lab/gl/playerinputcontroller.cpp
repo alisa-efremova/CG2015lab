@@ -28,67 +28,7 @@ void PlayerInputController::handleEvent(QEvent * event)
     if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)
     {
         QKeyEvent *keyEvent = (QKeyEvent *)event;
-        QVector3D speed;
-
-        if (keyEvent->type() == QEvent::KeyPress)
-        {
-            auto it = m_keyMap.find(keyEvent->key());
-            if (it != m_keyMap.end())
-            {
-                (*it).second = true;
-            }
-        }
-
-        if (keyEvent->type() == QEvent::KeyRelease)
-        {
-            auto it = m_keyMap.find(keyEvent->key());
-            if (it != m_keyMap.end())
-            {
-                (*it).second = false;
-            }
-        }
-
-        if (m_direction.left)
-        {
-            speed.setY(MOVE_SPEED);
-        }
-
-        if (m_direction.right)
-        {
-            speed.setY(-MOVE_SPEED);
-        }
-
-        if (m_direction.left && m_direction.right && keyEvent->key() == Qt::Key_A)
-        {
-            speed.setY(MOVE_SPEED);
-        }
-
-        if (m_direction.left && m_direction.right && keyEvent->key() == Qt::Key_D)
-        {
-            speed.setY(-MOVE_SPEED);
-        }
-
-        if (m_direction.up)
-        {
-            speed.setZ(MOVE_SPEED);
-        }
-
-        if (m_direction.down)
-        {
-            speed.setZ(-MOVE_SPEED);
-        }
-
-        if (m_direction.forward)
-        {
-            speed.setX(MOVE_SPEED);
-        }
-
-        if (m_direction.backward)
-        {
-            speed.setX(-MOVE_SPEED);
-        }
-
-        m_camera->setSpeed(speed);
+        processKeyEvent(keyEvent);
     }
     else if (event->type() == QEvent::MouseButtonPress)
     {
@@ -112,4 +52,51 @@ void PlayerInputController::handleEvent(QEvent * event)
     }
 }
 
+void PlayerInputController::processKeyEvent(QKeyEvent *keyEvent)
+{
+    QVector3D speed;
+    int currentKey = EMPTY;
+    int pressedKey = EMPTY;
 
+    //detect current direction by pressed key
+    auto it = m_keyMap.find(keyEvent->key());
+    if (it != m_keyMap.end())
+    {
+        currentKey = (*it).second;
+    }
+
+    //process pressed key
+    if (keyEvent->type() == QEvent::KeyPress && currentKey != EMPTY)
+    {
+        m_direction.at((*it).second) = true;
+        pressedKey = currentKey;
+    }
+
+    //process released key
+    if (keyEvent->type() == QEvent::KeyRelease && currentKey != EMPTY)
+    {
+        m_direction.at((*it).second) = false;
+    }
+
+    //set speed
+    speed.setY(getSpeedByDirection(LEFT, RIGHT, pressedKey));
+    speed.setX(getSpeedByDirection(FORWARD, BACKWARD, pressedKey));
+    speed.setZ(getSpeedByDirection(UP, DOWN, pressedKey));
+
+    m_camera->setSpeed(speed);
+}
+
+float PlayerInputController::getSpeedByDirection(const int direction, const int reverseDirection, const int currentDirection)
+{
+    float speedVal = 0;
+    if ((m_direction.at(direction) && !m_direction.at(reverseDirection)) || (m_direction.at(direction) && m_direction.at(reverseDirection) && currentDirection == direction))
+    {
+        speedVal = MOVE_SPEED;
+    }
+
+    if ((m_direction.at(reverseDirection) && !m_direction.at(direction)) || (m_direction.at(direction) && m_direction.at(reverseDirection) && currentDirection == reverseDirection))
+    {
+        speedVal = -MOVE_SPEED;
+    }
+    return speedVal;
+}
