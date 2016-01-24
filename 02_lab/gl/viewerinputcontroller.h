@@ -10,7 +10,6 @@ class ViewerInputController : public InputController
 public:
     ViewerInputController(SceneCamera * camera);
     virtual void handleEvent(QEvent * event) override;
-    virtual void updateCamera() override;
     virtual void saveCameraAttr() override;
     virtual void restoreCameraAttr() override;
 

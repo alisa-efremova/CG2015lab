@@ -10,11 +10,6 @@ PlayerInputController::PlayerInputController(SceneCamera * camera)
 {
 }
 
-void PlayerInputController::updateCamera()
-{
-    m_camera->loadMatrix();
-}
-
 void PlayerInputController::saveCameraAttr()
 {
     m_eye = m_camera->eye();

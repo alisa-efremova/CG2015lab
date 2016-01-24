@@ -8,11 +8,6 @@ ViewerInputController::ViewerInputController(SceneCamera * camera)
 {
 }
 
-void ViewerInputController::updateCamera()
-{
-    m_camera->loadMatrix();
-}
-
 void ViewerInputController::handleEvent(QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
