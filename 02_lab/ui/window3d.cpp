@@ -8,41 +8,6 @@ Window3D::Window3D(QWindow *parent)
 {
     setSurfaceType(QWindow::OpenGLSurface);
     setFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    m_viewerController = std::make_shared<ViewerInputController>();
-    m_playerController = std::make_shared<PlayerInputController>();
-    m_activeController = m_viewerController;
-    installEventFilter(this);
-    m_viewerController->installEventFilter(this);
-    m_playerController->installEventFilter(this);
-}
-
-bool Window3D::eventFilter(QObject *target, QEvent *event)
-{
-    /*if (event->type() == QEvent::KeyPress)
-    {
-      QKeyEvent *keyEvent = (QKeyEvent *)event;
-      if (keyEvent->key() == Qt::Key_Tab)
-      {
-        m_activeController->saveCameraAttr();
-        if (m_activeController == m_viewerController)
-        {
-            m_activeController = m_playerController;
-        }
-        else
-        {
-            m_activeController = m_viewerController;
-        }
-        m_activeController->restoreCameraAttr();
-        return true;
-      }
-      else if (keyEvent->key() == Qt::Key_Escape)
-      {
-          this->close();
-      }
-    }
-
-    m_activeController->handleEvent(event);*/
-    return QWindow::eventFilter(target, event);
 }
 
 void Window3D::setFixedSize(QSize size)
@@ -55,9 +20,6 @@ void Window3D::pushScene(std::shared_ptr<BaseScene> scene)
 {
     m_sceneStack.push_back(scene);
     scene->onPush();
-
-    m_playerController->setScene(scene);
-    m_viewerController->setScene(scene);
 }
 
 void Window3D::popScene()
@@ -71,30 +33,19 @@ void Window3D::popScene()
 
 bool Window3D::event(QEvent *event)
 {
+    if (!m_sceneStack.empty())
+    {
+        m_sceneStack.back()->handleEvent(event);
+    }
+
     if (event->type() == QEvent::KeyPress)
     {
       QKeyEvent *keyEvent = (QKeyEvent *)event;
-      if (keyEvent->key() == Qt::Key_Tab)
-      {
-        m_activeController->saveCameraAttr();
-        if (m_activeController == m_viewerController)
-        {
-            m_activeController = m_playerController;
-        }
-        else
-        {
-            m_activeController = m_viewerController;
-        }
-        m_activeController->restoreCameraAttr();
-        return true;
-      }
-      else if (keyEvent->key() == Qt::Key_Escape)
+      if (keyEvent->key() == Qt::Key_Escape)
       {
           this->close();
       }
     }
-
-    m_activeController->handleEvent(event);
 
     switch (event->type())
     {
@@ -197,7 +148,7 @@ void Window3D::updateScene(BaseScene &scene)
 
     QOpenGLPaintDevice device(size());
     QPainter painter(&device);
-    m_activeController->updateCamera();
+    scene.camera().loadMatrix();
     scene.render(painter);
     scene.visit([&](SceneNode & node) {
         node.render(painter);

@@ -5,32 +5,27 @@
 static float MOUSE_SPEED = 0.2;
 static float MOVE_SPEED = 2.0;
 
-PlayerInputController::PlayerInputController()
+PlayerInputController::PlayerInputController(SceneCamera * camera)
+    : m_camera(camera)
 {
-}
-
-void PlayerInputController::setScene(std::shared_ptr<BaseScene> scene)
-{
-    m_scene = scene;
-    saveCameraAttr();
 }
 
 void PlayerInputController::updateCamera()
 {
-    m_scene->camera().loadMatrix();
+    m_camera->loadMatrix();
 }
 
 void PlayerInputController::saveCameraAttr()
 {
-    m_eye = m_scene->camera().eye();
-    m_at = m_scene->camera().at();
-    m_up = m_scene->camera().up();
+    m_eye = m_camera->eye();
+    m_at = m_camera->at();
+    m_up = m_camera->up();
 }
 
 void PlayerInputController::restoreCameraAttr()
 {
-    m_scene->camera().lookAt(m_eye, m_at, m_up);
-    m_scene->camera().setRotatAngles(QVector3D(0, 0, 0));
+    m_camera->lookAt(m_eye, m_at, m_up);
+    m_camera->setRotatAngles(QVector3D(0, 0, 0));
 }
 
 void PlayerInputController::handleEvent(QEvent * event)
@@ -98,7 +93,7 @@ void PlayerInputController::handleEvent(QEvent * event)
             speed.setX(-MOVE_SPEED);
         }
 
-        m_scene->camera().setSpeed(speed);
+        m_camera->setSpeed(speed);
     }
     else if (event->type() == QEvent::MouseButtonPress)
     {
@@ -116,7 +111,7 @@ void PlayerInputController::handleEvent(QEvent * event)
         if (isMousePressed)
         {
             QPoint diff = mouseEvent->pos() - ptrMousePosition;
-            m_scene->camera().rotate(diff * MOUSE_SPEED);
+            m_camera->rotate(diff * MOUSE_SPEED);
             ptrMousePosition = mouseEvent->pos();
         }
     }

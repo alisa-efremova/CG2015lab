@@ -22,9 +22,9 @@ SOURCES += main.cpp \
     gameapplication.cpp \
     gl/scenecamera.cpp \
     gl/glhelper.cpp \
-    ui/viewerinputcontroller.cpp \
-    ui/playerinputcontroller.cpp \
-    gl/gamescene.cpp
+    gl/gamescene.cpp \
+    gl/playerinputcontroller.cpp \
+    gl/viewerinputcontroller.cpp
 
 HEADERS  += \
     ui/window3d.h \
@@ -35,9 +35,9 @@ HEADERS  += \
     gl/iscenecamera.h \
     gl/scenecamera.h \
     gl/glhelper.h \
-    ui/inputcontroller.h \
-    ui/viewerinputcontroller.h \
-    ui/playerinputcontroller.h \
-    gl/gamescene.h
+    gl/gamescene.h \
+    gl/inputcontroller.h \
+    gl/playerinputcontroller.h \
+    gl/viewerinputcontroller.h
 
 FORMS    +=

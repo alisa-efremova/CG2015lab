@@ -21,10 +21,12 @@ public:
     void onPush();
     void onPop();
 
+    virtual void handleEvent(QEvent *event);
+
     SceneCamera &camera();
     SceneCamera const& camera() const;
 
-private:
+protected:
     SceneCamera m_camera;
     QColor m_clearColor;
 };

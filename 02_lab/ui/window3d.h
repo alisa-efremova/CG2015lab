@@ -5,8 +5,7 @@
 #include <QTime>
 #include <memory>
 #include "../gl/basescene.h"
-#include "viewerinputcontroller.h"
-#include "playerinputcontroller.h"
+#include "../gl/gamescene.h"
 
 class Window3D : public QWindow
 {
@@ -20,8 +19,6 @@ public:
     void popScene();
 
     bool event(QEvent *) override;
-
-    bool eventFilter(QObject *target, QEvent *event);
 protected:
     void exposeEvent(QExposeEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -41,8 +38,4 @@ private:
 
     std::vector<std::shared_ptr<BaseScene>> m_sceneStack;
     QOpenGLContext *m_pContext = nullptr;
-
-    std::shared_ptr<InputController> m_activeController;
-    std::shared_ptr<ViewerInputController> m_viewerController;
-    std::shared_ptr<PlayerInputController> m_playerController;
 };

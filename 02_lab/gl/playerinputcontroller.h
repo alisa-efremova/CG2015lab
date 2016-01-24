@@ -1,7 +1,7 @@
 #pragma once
 
 #include "inputcontroller.h"
-#include "../gl/basescene.h"
+#include "basescene.h"
 #include <QEvent>
 #include <memory>
 #include <map>
@@ -9,15 +9,14 @@
 class PlayerInputController : public InputController
 {
 public:
-    PlayerInputController();
+    PlayerInputController(SceneCamera * camera);
     virtual void handleEvent(QEvent * event) override;
-    virtual void setScene(std::shared_ptr<BaseScene> scene) override;
     virtual void updateCamera() override;
     virtual void saveCameraAttr() override;
     virtual void restoreCameraAttr() override;
 
 private:
-    std::shared_ptr<BaseScene> m_scene;
+    SceneCamera * m_camera;
 
     QVector3D m_eye;
     QVector3D m_at;

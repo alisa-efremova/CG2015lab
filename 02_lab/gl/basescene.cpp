@@ -74,6 +74,11 @@ void BaseScene::onPop()
     });
 }
 
+void BaseScene::handleEvent(QEvent *event)
+{
+    Q_UNUSED(event);
+}
+
 SceneCamera &BaseScene::camera()
 {
     return m_camera;
