@@ -38,3 +38,8 @@ void GameScene::handleEvent(QEvent *event)
     m_activeController->handleEvent(event);
 }
 
+void GameScene::prepareControllers()
+{
+    m_playerController->saveCameraAttr();
+    m_viewerController->saveCameraAttr();
+}

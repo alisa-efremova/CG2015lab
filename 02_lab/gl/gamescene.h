@@ -13,7 +13,9 @@ public:
     virtual ~GameScene();
 
     virtual void handleEvent(QEvent *event) override;
+    void prepareControllers();
 
+private:
     std::shared_ptr<InputController> m_activeController;
     std::shared_ptr<ViewerInputController> m_viewerController;
     std::shared_ptr<PlayerInputController> m_playerController;
