@@ -18,7 +18,7 @@ Window3D::Window3D(QWindow *parent)
 
 bool Window3D::eventFilter(QObject *target, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress)
+    /*if (event->type() == QEvent::KeyPress)
     {
       QKeyEvent *keyEvent = (QKeyEvent *)event;
       if (keyEvent->key() == Qt::Key_Tab)
@@ -41,7 +41,7 @@ bool Window3D::eventFilter(QObject *target, QEvent *event)
       }
     }
 
-    m_activeController->handleEvent(event);
+    m_activeController->handleEvent(event);*/
     return QWindow::eventFilter(target, event);
 }
 
@@ -71,6 +71,31 @@ void Window3D::popScene()
 
 bool Window3D::event(QEvent *event)
 {
+    if (event->type() == QEvent::KeyPress)
+    {
+      QKeyEvent *keyEvent = (QKeyEvent *)event;
+      if (keyEvent->key() == Qt::Key_Tab)
+      {
+        m_activeController->saveCameraAttr();
+        if (m_activeController == m_viewerController)
+        {
+            m_activeController = m_playerController;
+        }
+        else
+        {
+            m_activeController = m_viewerController;
+        }
+        m_activeController->restoreCameraAttr();
+        return true;
+      }
+      else if (keyEvent->key() == Qt::Key_Escape)
+      {
+          this->close();
+      }
+    }
+
+    m_activeController->handleEvent(event);
+
     switch (event->type())
     {
     case QEvent::UpdateRequest:
@@ -173,7 +198,6 @@ void Window3D::updateScene(BaseScene &scene)
     QOpenGLPaintDevice device(size());
     QPainter painter(&device);
     m_activeController->updateCamera();
-    //scene.camera().loadMatrix(QVector3D(xRot, yRot, zRot), QVector3D(xMov, 0.0f, 0.0f));
     scene.render(painter);
     scene.visit([&](SceneNode & node) {
         node.render(painter);

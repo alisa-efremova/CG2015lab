@@ -10,7 +10,7 @@ class BaseScene : public SceneNode
     Q_DISABLE_COPY(BaseScene)
 public:
     BaseScene(QSize viewportSize = QSize(0, 0));
-    ~BaseScene();
+    virtual ~BaseScene();
 
     QColor clearColor();
     void setClearColor(const QColor &clearColor);

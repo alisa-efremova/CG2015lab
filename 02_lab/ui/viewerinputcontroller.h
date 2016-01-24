@@ -18,9 +18,8 @@ public:
 private:
     std::shared_ptr<BaseScene> m_scene;
 
-    float xRot = 0;
-    float yRot = 0;
-    float zRot = 0;
+    float m_yRot = 0;
+    float m_zRot = 0;
 
     QVector3D m_eye;
     QVector3D m_at;
@@ -28,7 +27,4 @@ private:
 
     bool isMousePressed = false;
     QPoint ptrMousePosition;
-
-    void changeDistance(QWheelEvent *event);
-    void turnAround(QMouseEvent *event);
 };

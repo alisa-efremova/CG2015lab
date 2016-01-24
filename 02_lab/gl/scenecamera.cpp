@@ -8,14 +8,14 @@ SceneCamera::SceneCamera(QSize viewport, QObject *parent)
 {
 }
 
-void SceneCamera::loadMatrix(const QVector3D &rotAngles)
+void SceneCamera::loadMatrix()
 {
     QMatrix4x4 matrix;
     matrix.lookAt(m_eye, m_eye + m_front, m_up);
 
     QVector3D left = QVector3D::crossProduct(m_up, m_front);
-    matrix.rotate(-rotAngles.y(), left);
-    matrix.rotate(rotAngles.z(), m_up);
+    matrix.rotate(-m_rotatAngles.y(), left);
+    matrix.rotate(m_rotatAngles.z(), m_up);
 
     GLHelper::setModelViewMatrix(matrix);
 }
@@ -38,6 +38,29 @@ void SceneCamera::advance(int64_t msec)
     m_eye += m_front * dFront;
     m_eye += left * dLeft;
     m_eye += m_up * dUp;
+}
+
+void SceneCamera::rotateAroundCenter(QPoint step)
+{
+    m_rotatAngles.setY(m_rotatAngles.y() + step.y());
+
+    if (m_rotatAngles.y() > 90) m_rotatAngles.setY(90);
+    if (m_rotatAngles.y() < 0) m_rotatAngles.setY(0);
+    m_rotatAngles.setZ(m_rotatAngles.z() + step.x());
+}
+
+void SceneCamera::rotate(QPoint step)
+{
+    QMatrix4x4 matrix;
+    QVector3D left = QVector3D::crossProduct(m_up, m_front);
+    matrix.rotate(-1 * step.x(), m_up);
+    matrix.rotate(step.y(), left);
+    m_front = matrix * m_front;
+}
+
+void SceneCamera::moveForward(float step)
+{
+    m_eye += m_front * step;
 }
 
 QSize SceneCamera::viewport() const
@@ -72,4 +95,14 @@ void SceneCamera::setSpeed(QVector3D speed)
 QVector3D SceneCamera::speed() const
 {
     return m_speed;
+}
+
+void SceneCamera::setRotatAngles(QVector3D rotatAngles)
+{
+    m_rotatAngles = rotatAngles;
+}
+
+QVector3D SceneCamera::getRotatAngles() const
+{
+    return m_rotatAngles;
 }
