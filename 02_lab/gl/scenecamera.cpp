@@ -2,6 +2,9 @@
 #include "glhelper.h"
 #include <QMatrix4x4>
 
+static float Y_ROT_MAX_ANGLE = 90;
+static float Y_ROT_MIN_ANGLE = 0;
+
 SceneCamera::SceneCamera(QSize viewport, QObject *parent)
     : QObject(parent)
     , m_viewport(viewport)
@@ -44,8 +47,8 @@ void SceneCamera::rotateAroundCenter(QPoint step)
 {
     m_rotatAngles.setY(m_rotatAngles.y() + step.y());
 
-    if (m_rotatAngles.y() > 90) m_rotatAngles.setY(90);
-    if (m_rotatAngles.y() < 0) m_rotatAngles.setY(0);
+    if (m_rotatAngles.y() > Y_ROT_MAX_ANGLE) m_rotatAngles.setY(Y_ROT_MAX_ANGLE);
+    if (m_rotatAngles.y() < Y_ROT_MIN_ANGLE) m_rotatAngles.setY(Y_ROT_MIN_ANGLE);
     m_rotatAngles.setZ(m_rotatAngles.z() + step.x());
 }
 
