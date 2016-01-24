@@ -12,6 +12,7 @@ public:
 
 private slots:
     void loadScene();
+    void loadSceneFromJson();
 
 private:
     Window3D m_window;

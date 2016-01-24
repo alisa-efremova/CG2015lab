@@ -1,7 +1,9 @@
 #include "gameapplication.h"
 #include "gl/scenenode.h"
 #include "nodes/coloredcube.h"
+#include "scenejsonparser.h"
 
+static QString path = "D:/CG2015lab/02_lab/scene.json";
 const QSize FIXED_WINDOW_SIZE(800, 600);
 
 GameApplication::GameApplication(int argc, char *argv[])
@@ -13,7 +15,8 @@ int GameApplication::enterGameLoop()
 {
     m_window.setFixedSize(FIXED_WINDOW_SIZE);
     m_window.show();
-    connect(&m_window, SIGNAL(activeChanged()), this, SLOT(loadScene()));
+    //connect(&m_window, SIGNAL(activeChanged()), this, SLOT(loadScene()));
+    connect(&m_window, SIGNAL(activeChanged()), this, SLOT(loadSceneFromJson()));
 
     return exec();
 }
@@ -28,7 +31,27 @@ void GameApplication::loadScene()
     scene->prepareControllers();
 
     new ColoredCube(scene.get());
-    m_window.pushScene(scene);
 
+    m_window.pushScene(scene);
 }
+
+void GameApplication::loadSceneFromJson()
+{
+    disconnect(&m_window, SIGNAL(activeChanged()), this, SLOT(loadSceneFromJson()));
+
+    auto scene = std::make_shared<GameScene>();
+    scene->camera().setViewport(m_window.size());
+    auto parser = new SceneJsonParser(scene, path);
+    parser->readIntoJsonObject();
+    parser->setCameraSettings();
+    scene->prepareControllers();
+    parser->parseObjects();
+
+    if (parser->isValid())
+    {
+        m_window.pushScene(scene);
+    }
+}
+
+
 

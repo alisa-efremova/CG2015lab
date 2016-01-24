@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     gl/glhelper.cpp \
     gl/gamescene.cpp \
     gl/playerinputcontroller.cpp \
-    gl/viewerinputcontroller.cpp
+    gl/viewerinputcontroller.cpp \
+    scenejsonparser.cpp
 
 HEADERS  += \
     ui/window3d.h \
@@ -38,6 +39,7 @@ HEADERS  += \
     gl/gamescene.h \
     gl/inputcontroller.h \
     gl/playerinputcontroller.h \
-    gl/viewerinputcontroller.h
+    gl/viewerinputcontroller.h \
+    scenejsonparser.h
 
 FORMS    +=

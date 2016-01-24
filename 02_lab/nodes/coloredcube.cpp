@@ -20,7 +20,7 @@ struct SimpleVertex
     Color4 color;
 };
 
-static void drawOpenGLCube(bool showWired)
+static void drawOpenGLCube(bool showWired, QVector3D position, float scale)
 {
     /*
 
@@ -65,6 +65,16 @@ static void drawOpenGLCube(bool showWired)
         }
     }
 
+    for (SimpleVertex &vert : vertices)
+    {
+        vert.pos.x += position.x();
+        vert.pos.y += position.y();
+        vert.pos.z += position.z();
+        vert.pos.x *= scale;
+        vert.pos.y *= scale;
+        vert.pos.z *= scale;
+    }
+
     // Массив граней, а точнее, индексов составляющих их вершин.
     // Индексы вершин граней перечисляются в порядке их обхода
     // против часовой стрелки (если смотреть на грань снаружи)
@@ -90,14 +100,16 @@ static void drawOpenGLCube(bool showWired)
 
     glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, faces);
 
-    // Выключаем использовнием массива цветов
+    // Выключаем использовние массива цветов
     glDisableClientState(GL_COLOR_ARRAY);
     // Выключаем использование массива координат вершин
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 ColoredCube::ColoredCube(SceneNode *parent)
-    : SceneNode(parent)
+    : SceneNode(parent),
+      m_scale(1),
+      m_position(QVector3D(0, 0, 0))
 {
 }
 
@@ -110,8 +122,18 @@ void ColoredCube::render(QPainter &painter)
 {
     (void)painter;
 
-    drawOpenGLCube(false);
+    drawOpenGLCube(false, m_position, m_scale);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    drawOpenGLCube(true);
+    drawOpenGLCube(true, m_position, m_scale);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void ColoredCube::setScale(float scale)
+{
+    m_scale = scale;
+}
+
+void ColoredCube::setPosition(QVector3D position)
+{
+    m_position = position;
 }
