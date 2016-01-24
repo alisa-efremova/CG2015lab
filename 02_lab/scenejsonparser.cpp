@@ -59,7 +59,7 @@ void SceneJsonParser::parseObjects()
         auto className = object["class"].toString();
         auto scale = object["scale"].toDouble();
         auto position = getVector3D(object["position"].toArray());
-qDebug() << className;
+
         if (className == "ColoredCube")
         {
             auto cube = new ColoredCube(m_scene.get());

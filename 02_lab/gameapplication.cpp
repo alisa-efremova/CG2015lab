@@ -3,7 +3,7 @@
 #include "nodes/coloredcube.h"
 #include "scenejsonparser.h"
 
-static QString path = "D:/CG2015lab/02_lab/scene.json";
+static QString SCENE_JSON_PATH = "D:/CG2015lab/02_lab/scene.json";
 const QSize FIXED_WINDOW_SIZE(800, 600);
 
 GameApplication::GameApplication(int argc, char *argv[])
@@ -41,7 +41,7 @@ void GameApplication::loadSceneFromJson()
 
     auto scene = std::make_shared<GameScene>();
     scene->camera().setViewport(m_window.size());
-    auto parser = new SceneJsonParser(scene, path);
+    auto parser = new SceneJsonParser(scene, SCENE_JSON_PATH);
     parser->readIntoJsonObject();
     parser->setCameraSettings();
     scene->prepareControllers();
