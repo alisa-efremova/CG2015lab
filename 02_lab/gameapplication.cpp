@@ -1,7 +1,7 @@
 #include "gameapplication.h"
 #include "gl/scenenode.h"
 #include "nodes/coloredcube.h"
-#include "scenejsonparser.h"
+#include "json/scenejsonparser.h"
 
 static QString SCENE_JSON_PATH = "D:/CG2015lab/02_lab/scene.json";
 const QSize FIXED_WINDOW_SIZE(800, 600);

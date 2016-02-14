@@ -8,6 +8,8 @@ class QPainter;
 class SceneNode;
 class BaseScene;
 
+enum NodeType {Cube, Sphere};
+
 // Abstract class: animate() and render() are not implemented.
 // Nodes has children. To add children, use setParent() method in children node.
 class SceneNode

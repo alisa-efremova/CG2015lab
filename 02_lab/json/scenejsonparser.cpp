@@ -1,8 +1,8 @@
+#include "jsonkey.h"
 #include "scenejsonparser.h"
 #include "nodes/coloredcube.h"
 #include <QCoreApplication>
 #include <QJsonDocument>
-#include <QJsonArray>
 #include <QFile>
 #include <QDebug>
 
@@ -17,23 +17,16 @@ void SceneJsonParser::readIntoJsonObject()
     QFile json(m_path);
     if (json.open(QIODevice::ReadOnly))
     {
-        QJsonParseError  parseError;
+        QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(json.readAll(), &parseError);
-        if (parseError.error == QJsonParseError::NoError)
+        if (parseError.error == QJsonParseError::NoError && jsonDoc.isObject())
         {
-            if (jsonDoc.isObject())
-            {
-                m_data = jsonDoc.object();
-                auto obj = jsonDoc.object();
-                auto camera = obj["camera"].toObject();
-                auto eye = camera["eye"].toArray();
-            }
+            m_data = jsonDoc.object();
         }
         else
         {
             qDebug() << parseError.errorString();
         }
-
     }
     else
     {
@@ -43,22 +36,22 @@ void SceneJsonParser::readIntoJsonObject()
 
 void SceneJsonParser::setCameraSettings()
 {
-    auto camera = m_data["camera"].toObject();
-    auto eye = getVector3D(camera["eye"].toArray());
-    auto center = getVector3D(camera["center"].toArray());
-    auto up = getVector3D(camera["up"].toArray());
+    auto camera = m_data[JsonKey::CAMERA].toObject();
+    auto eye    = JsonHelper::getVector3D(camera[JsonKey::EYE].toArray());
+    auto center = JsonHelper::getVector3D(camera[JsonKey::CENTER].toArray());
+    auto up     = JsonHelper::getVector3D(camera[JsonKey::UP].toArray());
     m_scene->camera().lookAt(eye, center, up);
 }
 
 void SceneJsonParser::parseObjects()
 {
-    auto objects = m_data["objects"].toArray();
+    auto objects = m_data[JsonKey::OBJECTS].toArray();
     foreach (QJsonValue val, objects)
     {
         auto object = val.toObject();
-        auto className = object["class"].toString();
-        auto scale = object["scale"].toDouble();
-        auto position = getVector3D(object["position"].toArray());
+        auto className = object[JsonKey::CLASS].toString();
+        auto scale = object[JsonKey::SCALE].toDouble();
+        auto position = JsonHelper::getVector3D(object[JsonKey::POSITION].toArray());
 
         if (className == "ColoredCube")
         {
@@ -68,23 +61,6 @@ void SceneJsonParser::parseObjects()
             m_isValid = true;
         }
     }
-}
-
-QVector3D SceneJsonParser::getVector3D(const QJsonArray & jsonArr) const
-{
-    QVector3D vec(0, 0, 0);
-    if (jsonArr.size() == 3)
-    {
-        float arr[3];
-        int i = 0;
-        foreach(QJsonValue val, jsonArr)
-        {
-            arr[i] = val.toDouble();
-            i++;
-        }
-        vec = QVector3D(arr[0], arr[1], arr[2]);
-    }
-    return vec;
 }
 
 bool SceneJsonParser::isValid() const

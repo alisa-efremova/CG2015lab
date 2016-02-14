@@ -1,9 +1,8 @@
 #pragma once
 
-#include <QJsonObject>
-#include <QVector3D>
 #include <memory>
 #include "gl/basescene.h"
+#include "jsonhelper.h"
 
 class SceneJsonParser
 {
@@ -13,7 +12,6 @@ public:
     void readIntoJsonObject();
     void setCameraSettings();
     void parseObjects();
-    QVector3D getVector3D(const QJsonArray & jsonArr) const;
     bool isValid() const;
 
 private:
