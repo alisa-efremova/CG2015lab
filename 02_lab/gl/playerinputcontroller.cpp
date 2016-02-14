@@ -20,7 +20,7 @@ void PlayerInputController::saveCameraAttr()
 void PlayerInputController::restoreCameraAttr()
 {
     m_camera->lookAt(m_eye, m_at, m_up);
-    m_camera->setRotatAngles(QVector3D(0, 0, 0));
+    m_camera->setRotationAngles(QVector3D(0, 0, 0));
 }
 
 void PlayerInputController::handleEvent(QEvent * event)

@@ -33,11 +33,8 @@ public:
     void setSpeed(QVector3D speed);
     QVector3D speed() const;
 
-    void setRotatAngles(QVector3D rotatAngles);
-    QVector3D getRotatAngles() const;
-
-protected:
-
+    void setRotationAngles(QVector3D rotatAngles);
+    QVector3D getRotatationAngles() const;
 
 private:
     QSize m_viewport;
@@ -45,5 +42,5 @@ private:
     QVector3D m_front; /**< Front direction */
     QVector3D m_up;    /**< Up direction */
     QVector3D m_speed; /**< Speed, meters per second, front/left/up */
-    QVector3D m_rotatAngles;
+    QVector3D m_rotationAngles;
 };

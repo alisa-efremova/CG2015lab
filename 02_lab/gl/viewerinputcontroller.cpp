@@ -42,12 +42,12 @@ void ViewerInputController::saveCameraAttr()
     m_eye = m_camera->eye();
     m_at = m_camera->at();
     m_up = m_camera->up();
-    m_yRot = m_camera->getRotatAngles().y();
-    m_zRot = m_camera->getRotatAngles().z();
+    m_yRot = m_camera->getRotatationAngles().y();
+    m_zRot = m_camera->getRotatationAngles().z();
 }
 
 void ViewerInputController::restoreCameraAttr()
 {
     m_camera->lookAt(m_eye, m_at, m_up);
-    m_camera->setRotatAngles(QVector3D(0, m_yRot, m_zRot));
+    m_camera->setRotationAngles(QVector3D(0, m_yRot, m_zRot));
 }
