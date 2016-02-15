@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../gl/scenenode.h"
+#include "nodes/loadablescenenode.h"
 #include <QVector3D>
 
-class ColoredCube : public SceneNode
+class ColoredCube : public LoadableSceneNode
 {
 public:
     ColoredCube(SceneNode *parent);
@@ -16,4 +17,5 @@ public:
 
     float m_scale;
     QVector3D m_position;
+    bool loadFromJson(QJsonObject &object) override;
 };

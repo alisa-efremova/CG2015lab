@@ -3,12 +3,12 @@
 #include <QObject>
 #include <memory>
 #include <stdint.h>
+#include "json/jsonhelper.h"
+#include "json/jsonkey.h"
 
 class QPainter;
 class SceneNode;
 class BaseScene;
-
-enum NodeType {Cube, Sphere};
 
 // Abstract class: animate() and render() are not implemented.
 // Nodes has children. To add children, use setParent() method in children node.

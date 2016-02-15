@@ -107,7 +107,7 @@ static void drawOpenGLCube(bool showWired, QVector3D position, float scale)
 }
 
 ColoredCube::ColoredCube(SceneNode *parent)
-    : SceneNode(parent),
+    : LoadableSceneNode(parent),
       m_scale(1),
       m_position(QVector3D(0, 0, 0))
 {
@@ -136,4 +136,15 @@ void ColoredCube::setScale(float scale)
 void ColoredCube::setPosition(QVector3D position)
 {
     m_position = position;
+}
+
+bool ColoredCube::loadFromJson(QJsonObject & object)
+{
+    auto scale = object[JsonKey::SCALE].toDouble();
+    auto position = JsonHelper::getVector3D(object[JsonKey::POSITION].toArray());
+
+    setPosition(position);
+    setScale(scale);
+
+    return true;
 }

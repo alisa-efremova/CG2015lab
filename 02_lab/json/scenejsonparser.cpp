@@ -1,6 +1,7 @@
 #include "jsonkey.h"
 #include "scenejsonparser.h"
-#include "nodes/coloredcube.h"
+#include "nodes/scenenodefactory.h"
+#include "nodes/loadablescenenode.h"
 #include <QCoreApplication>
 #include <QJsonDocument>
 #include <QFile>
@@ -50,16 +51,8 @@ void SceneJsonParser::parseObjects()
     {
         auto object = val.toObject();
         auto className = object[JsonKey::CLASS].toString();
-        auto scale = object[JsonKey::SCALE].toDouble();
-        auto position = JsonHelper::getVector3D(object[JsonKey::POSITION].toArray());
-
-        if (className == "ColoredCube")
-        {
-            auto cube = new ColoredCube(m_scene.get());
-            cube->setPosition(position);
-            cube->setScale(scale);
-            m_isValid = true;
-        }
+        LoadableSceneNode * node = SceneNodeFactory::createNode(className, m_scene.get());
+        m_isValid = node->loadFromJson(object);
     }
 }
 

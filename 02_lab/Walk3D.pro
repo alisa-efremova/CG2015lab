@@ -42,6 +42,8 @@ HEADERS  += \
     gl/viewerinputcontroller.h \
     json/scenejsonparser.h \
     json/jsonhelper.h \
-    json/jsonkey.h
+    json/jsonkey.h \
+    nodes/scenenodefactory.h \
+    nodes/loadablescenenode.h
 
 FORMS    +=
